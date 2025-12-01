@@ -59,7 +59,7 @@ export const Dashboard3: React.FC = () => {
                 ageGroup: item.ageGroup,
                 men: item.men,
                 women: item.women,
-              }))}
+              })).reverse()}
               leftDataKey="men"
               rightDataKey="women"
               leftLabel="Мужчины"

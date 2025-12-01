@@ -23,7 +23,7 @@ export const MortalityRates: React.FC<MortalityRatesProps> = ({ men, women }) =>
     menDaily: item.daily,
     womenOverall: women[index]?.overallHospital || 0,
     womenDaily: women[index]?.daily || 0,
-  }));
+  })).reverse(); // Переворачиваем порядок: старшие возраста вверху, младшие внизу
 
   return (
     <div>

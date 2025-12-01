@@ -12,13 +12,13 @@ export const PlaceOfDeath: React.FC<PlaceOfDeathProps> = ({ men, women }) => {
     ageGroup: item.ageGroup,
     home: item.home,
     hospital: item.hospital,
-  }));
+  })).reverse(); // Переворачиваем порядок: старшие возраста вверху, младшие внизу
 
   const womenData = women.map((item) => ({
     ageGroup: item.ageGroup,
     home: item.home,
     hospital: item.hospital,
-  }));
+  })).reverse(); // Переворачиваем порядок: старшие возраста вверху, младшие внизу
 
   return (
     <div>

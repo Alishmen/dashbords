@@ -34,15 +34,21 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
   maxValue = 100,
 }) => {
   // Подготовка данных: инвертируем значения для левой стороны
+  // Если нет rightBars, отображаем leftBars справа (положительные значения) для растяжения на всю ширину
   const chartData = data.map((item) => {
     const result: any = { ageGroup: item.ageGroup };
     
-    leftBars.forEach((bar) => {
-      result[`left_${bar.key}`] = -(item[bar.key] as number || 0);
-    });
-    
     if (rightBars) {
+      // Есть rightBars - используем стандартную логику: leftBars слева (отрицательные), rightBars справа (положительные)
+      leftBars.forEach((bar) => {
+        result[`left_${bar.key}`] = -(item[bar.key] as number || 0);
+      });
       rightBars.forEach((bar) => {
+        result[`right_${bar.key}`] = item[bar.key] as number || 0;
+      });
+    } else {
+      // Нет rightBars - отображаем leftBars справа (положительные значения) для растяжения на всю ширину
+      leftBars.forEach((bar) => {
         result[`right_${bar.key}`] = item[bar.key] as number || 0;
       });
     }
@@ -57,7 +63,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
           {title}
         </h3>
       )}
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={Math.max(500, data.length * 25 + 100)}>
         <BarChart
           data={chartData}
           layout="vertical"
@@ -66,7 +72,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             type="number"
-            domain={[-maxValue, maxValue]}
+            domain={rightBars ? [-maxValue, maxValue] : [0, maxValue]}
             tickFormatter={(value) => Math.abs(value).toString()}
           />
           <YAxis
@@ -74,6 +80,7 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
             type="category"
             width={90}
             tick={{ fontSize: 12 }}
+            interval={0}
           />
           <Tooltip
             formatter={(value: number, name: string) => {
@@ -86,8 +93,8 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
           />
           <Legend />
           
-          {/* Левая сторона (stacked) */}
-          {leftBars.map((bar, index) => (
+          {/* Левая сторона (stacked) - только если есть rightBars */}
+          {rightBars && leftBars.map((bar, index) => (
             <Bar
               key={`left_${bar.key}`}
               dataKey={`left_${bar.key}`}
@@ -98,17 +105,30 @@ export const StackedBarChart: React.FC<StackedBarChartProps> = ({
             />
           ))}
           
-          {/* Правая сторона (stacked, если есть) */}
-          {rightBars && rightBars.map((bar, index) => (
-            <Bar
-              key={`right_${bar.key}`}
-              dataKey={`right_${bar.key}`}
-              stackId="right"
-              fill={bar.color}
-              name={bar.label}
-              radius={index === 0 ? [4, 0, 0, 4] : 0}
-            />
-          ))}
+          {/* Правая сторона (stacked) - либо rightBars, либо leftBars если нет rightBars */}
+          {rightBars ? (
+            rightBars.map((bar, index) => (
+              <Bar
+                key={`right_${bar.key}`}
+                dataKey={`right_${bar.key}`}
+                stackId="right"
+                fill={bar.color}
+                name={bar.label}
+                radius={index === 0 ? [4, 0, 0, 4] : 0}
+              />
+            ))
+          ) : (
+            leftBars.map((bar, index) => (
+              <Bar
+                key={`right_${bar.key}`}
+                dataKey={`right_${bar.key}`}
+                stackId="right"
+                fill={bar.color}
+                name={bar.label}
+                radius={index === leftBars.length - 1 ? [4, 4, 0, 0] : 0}
+              />
+            ))
+          )}
         </BarChart>
       </ResponsiveContainer>
     </div>

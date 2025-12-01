@@ -8,19 +8,30 @@ interface OutpatientStructureProps {
 }
 
 export const OutpatientStructure: React.FC<OutpatientStructureProps> = ({ men, women }) => {
-  const menData = men.map((item) => ({
-    ageGroup: item.ageGroup,
-    visitedMOPerCause: item.visitedMOPerCause,
-    didNotVisitMO: item.didNotVisitMO,
-    visitedMOOtherReason: item.visitedMOOtherReason,
-  }));
+  // Подготовка данных: переворачиваем все кроме "Всего", которое должно быть в конце
+  const prepareData = (data: OutpatientStructureData[]) => {
+    const totalItem = data.find(item => item.ageGroup === 'Всего');
+    const ageGroups = data.filter(item => item.ageGroup !== 'Всего');
+    
+    const reversedAgeGroups = ageGroups.map((item) => ({
+      ageGroup: item.ageGroup,
+      visitedMOPerCause: item.visitedMOPerCause,
+      didNotVisitMO: item.didNotVisitMO,
+      visitedMOOtherReason: item.visitedMOOtherReason,
+    })).reverse();
+    
+    return totalItem 
+      ? [...reversedAgeGroups, {
+          ageGroup: totalItem.ageGroup,
+          visitedMOPerCause: totalItem.visitedMOPerCause,
+          didNotVisitMO: totalItem.didNotVisitMO,
+          visitedMOOtherReason: totalItem.visitedMOOtherReason,
+        }]
+      : reversedAgeGroups;
+  };
 
-  const womenData = women.map((item) => ({
-    ageGroup: item.ageGroup,
-    visitedMOPerCause: item.visitedMOPerCause,
-    didNotVisitMO: item.didNotVisitMO,
-    visitedMOOtherReason: item.visitedMOOtherReason,
-  }));
+  const menData = prepareData(men);
+  const womenData = prepareData(women);
 
   return (
     <div>

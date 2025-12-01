@@ -13,7 +13,7 @@ export const DeathsByAgeSex: React.FC<DeathsByAgeSexProps> = ({ data }) => {
         ageGroup: item.ageGroup,
         men: item.men,
         women: item.women,
-      }))}
+      })).reverse()}
       leftDataKey="men"
       rightDataKey="women"
       leftLabel="Мужчины, умерло по причине: по всем причинам"

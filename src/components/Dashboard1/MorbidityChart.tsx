@@ -15,7 +15,7 @@ export const MorbidityChart: React.FC<MorbidityChartProps> = ({ men, women }) =>
     menTotal: item.total,
     womenPrimary: women[index]?.primary || 0,
     womenTotal: women[index]?.total || 0,
-  }));
+  })).reverse(); // Переворачиваем порядок: старшие возраста вверху, младшие внизу
 
   return (
     <PopulationPyramid
