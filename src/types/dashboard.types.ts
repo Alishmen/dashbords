@@ -1,7 +1,8 @@
 // Общие типы для фильтрации
 export interface FilterOptions {
   territory?: string;
-  mo?: string; // Медицинская организация
+  mo?: string; // Медицинская организация (код МО)
+  year?: string; // Год (2024, 2025, 2026)
   site?: string; // Участок
   gender?: 'all' | 'male' | 'female';
   age?: string;

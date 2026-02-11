@@ -21,7 +21,7 @@ export const Dashboard3: React.FC = () => {
 
   const availableOptions = {
     territories: ['Удмуртская Республика', 'Ижевск'],
-    mos: data.mortalityByMO.map((mo) => mo.name),
+    mos: data.mortalityByMO.map((mo) => ({ code: mo.id, name: mo.name })),
     nosologicalGroups: ['По всем причинам', 'I00-I99', 'C00-C97'],
   };
 

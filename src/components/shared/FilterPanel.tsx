@@ -16,7 +16,8 @@ interface FilterPanelProps {
   onFilterChange: (filters: FilterOptions) => void;
   availableOptions?: {
     territories?: string[];
-    mos?: string[];
+    years?: string[];
+    mos?: Array<{ code: string; name: string }>;
     sites?: string[];
     ages?: string[];
     nosologicalGroups?: string[];
@@ -47,19 +48,19 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       }}
     >
       <Grid container spacing={2}>
-        {availableOptions?.territories && (
+        {availableOptions?.years && (
           <Grid item xs={12} sm={6} md={2.4}>
             <FormControl fullWidth size="small">
-              <InputLabel>Территория</InputLabel>
+              <InputLabel>Год</InputLabel>
               <Select
-                value={filters.territory || 'all'}
-                label="Территория"
-                onChange={handleChange('territory')}
+                value={filters.year || 'all'}
+                label="Год"
+                onChange={handleChange('year')}
               >
                 <MenuItem value="all">Все</MenuItem>
-                {availableOptions.territories.map((territory) => (
-                  <MenuItem key={territory} value={territory}>
-                    {territory}
+                {availableOptions.years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
                   </MenuItem>
                 ))}
               </Select>
@@ -76,10 +77,30 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                 label="Медицинская организация"
                 onChange={handleChange('mo')}
               >
-                <MenuItem value="all">Все</MenuItem>
+                <MenuItem value="all">Все МО</MenuItem>
                 {availableOptions.mos.map((mo) => (
-                  <MenuItem key={mo} value={mo}>
-                    {mo}
+                  <MenuItem key={mo.code} value={mo.code}>
+                    {mo.code} - {mo.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+
+        {availableOptions?.territories && (
+          <Grid item xs={12} sm={6} md={2.4}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Территория</InputLabel>
+              <Select
+                value={filters.territory || 'all'}
+                label="Территория"
+                onChange={handleChange('territory')}
+              >
+                <MenuItem value="all">Все</MenuItem>
+                {availableOptions.territories.map((territory) => (
+                  <MenuItem key={territory} value={territory}>
+                    {territory}
                   </MenuItem>
                 ))}
               </Select>
